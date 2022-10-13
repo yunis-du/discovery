@@ -1,4 +1,4 @@
-module discovery
+module github.com/duyunzhi/discovery
 
 go 1.19
 
