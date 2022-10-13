@@ -2,6 +2,9 @@
 
 ## Install
 
+```bash
+go get -u github.com/duyunzhi/discovery
+```
 ## Usage
 
 ### Broadcast
