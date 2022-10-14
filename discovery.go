@@ -128,32 +128,29 @@ func initOptions(options *Options) {
 	options.payloadLen = len(options.Payload)
 }
 
-func (b *Broadcast) StartBroadcast() {
+func (b *Broadcast) StartBroadcast() error {
 	initOptions(b.Options)
 
 	ifaces, err := FilterInterfaces(b.Options.IPVersion == IPv4)
 	if err != nil {
-		return
+		return err
 	}
 	if len(ifaces) == 0 {
-		fmt.Println("no multicast interface found")
-		return
+		return fmt.Errorf("no multicast interface found")
 	}
 
 	address := net.JoinHostPort(b.Options.MulticastAddress, b.Options.Port)
 
 	c, err := net.ListenPacket(fmt.Sprintf("udp%d", b.Options.IPVersion), address)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 	defer c.Close()
 
 	group := net.ParseIP(b.Options.MulticastAddress)
 	port, err := strconv.Atoi(b.Options.Port)
 	if err != nil {
-		fmt.Println(err)
-		return
+		return err
 	}
 	var npc NetPacketConn
 	if b.Options.IPVersion == IPv4 {
@@ -195,6 +192,7 @@ LOOP:
 			}
 		}
 	}
+	return nil
 }
 
 func (b *Broadcast) StartAsSync() {
