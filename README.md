@@ -10,14 +10,14 @@ go get -u github.com/duyunzhi/discovery
 ### Broadcast
 
 ```go
-broadcast := NewBroadcast(&Options{Duration: -1, BroadcastDelay: time.Second * 2})
+broadcast := discovery.NewBroadcast(&discovery.Options{Duration: -1, BroadcastDelay: time.Second * 2})
 broadcast.StartBroadcast()
 ```
 
 ### Discovery
 
 ```go
-discover := NewDiscover(&Options{Limit: 1})
+discover := discovery.NewDiscover(&discovery.Options{Limit: 1})
 broadcast, _ := discover.DiscoverBroadcast()
 for _, discovered := range broadcast {
     fmt.Println(discovered.Address)
