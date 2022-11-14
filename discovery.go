@@ -162,7 +162,7 @@ func (b *Broadcast) StartBroadcast() error {
 	for i := range ifaces {
 		err := npc.JoinGroup(ifaces[i], &net.UDPAddr{IP: group, Port: port})
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 		}
 	}
 
@@ -226,7 +226,7 @@ func (d *Discover) receive() error {
 		return err
 	}
 	if len(ifaces) == 0 {
-		fmt.Println("no multicast interface found")
+		//fmt.Println("no multicast interface found")
 		return err
 	}
 
@@ -265,7 +265,7 @@ func (d *Discover) receive() error {
 		var buf [66507]byte
 		n, src, err := npc.ReadFrom(buf[:])
 		if err != nil {
-			fmt.Println(err)
+			//fmt.Println(err)
 		}
 		if n > 0 && string(d.Options.Payload) == string(buf[:d.Options.payloadLen]) {
 			srcHost, _, _ := net.SplitHostPort(src.String())
