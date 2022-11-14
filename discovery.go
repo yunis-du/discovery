@@ -261,31 +261,34 @@ func (d *Discover) receive() error {
 		d.done <- true
 	})
 
+	go func() {
+		var buf [66507]byte
+		n, src, err := npc.ReadFrom(buf[:])
+		if err != nil {
+			fmt.Println(err)
+		}
+		if n > 0 && string(d.Options.Payload) == string(buf[:d.Options.payloadLen]) {
+			srcHost, _, _ := net.SplitHostPort(src.String())
+			d.Lock()
+			if _, ok := d.received[srcHost]; !ok {
+				d.received[srcHost] = byte('0')
+			}
+			d.Unlock()
+
+			if d.Options.Limit > 0 {
+				if d.Options.Limit == len(d.received) {
+					d.done <- true
+				}
+			}
+		}
+	}()
+
 LOOP:
 	for {
 		select {
 		case <-d.done:
 			break LOOP
 		default:
-			var buf [66507]byte
-			n, src, err := npc.ReadFrom(buf[:])
-			if err != nil {
-				fmt.Println(err)
-			}
-			if n > 0 && string(d.Options.Payload) == string(buf[:d.Options.payloadLen]) {
-				srcHost, _, _ := net.SplitHostPort(src.String())
-				d.Lock()
-				if _, ok := d.received[srcHost]; !ok {
-					d.received[srcHost] = byte('0')
-				}
-				d.Unlock()
-
-				if d.Options.Limit > 0 {
-					if d.Options.Limit == len(d.received) {
-						d.done <- true
-					}
-				}
-			}
 		}
 	}
 	return err
