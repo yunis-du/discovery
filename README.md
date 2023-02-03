@@ -3,7 +3,7 @@
 ## Install
 
 ```bash
-go get -u github.com/duyunzhi/discovery
+go get -u github.com/duyunis/discovery
 ```
 ## Usage
 
